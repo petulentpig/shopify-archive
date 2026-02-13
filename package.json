@@ -1,0 +1,14 @@
+{
+  "name": "shopify-archive",
+  "version": "1.0.0",
+  "description": "Archives Shopify products with zero inventory across all variants",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
