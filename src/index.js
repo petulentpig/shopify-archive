@@ -14,9 +14,17 @@ async function run() {
     const products = await fetchAllActiveProducts();
     console.log(`[ARCHIVE] Found ${products.length} active products`);
 
-    const nonGiftCards = products.filter(
-      (p) => p.product_type?.toLowerCase() !== "gift card" && p.product_type?.toLowerCase() !== "gift_card"
-    );
+    const nonGiftCards = products.filter((p) => {
+      // Shopify gift cards have a boolean gift_card field
+      if (p.gift_card === true) return false;
+      // Also check product_type as a fallback
+      const pt = (p.product_type || "").toLowerCase();
+      if (pt === "gift card" || pt === "gift_card" || pt === "gift cards") return false;
+      // Also check the title for gift card products
+      const title = (p.title || "").toLowerCase();
+      if (title.includes("gift card")) return false;
+      return true;
+    });
     const skippedGiftCards = products.length - nonGiftCards.length;
     console.log(`[ARCHIVE] Skipped ${skippedGiftCards} gift cards`);
 
