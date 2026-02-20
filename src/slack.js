@@ -39,7 +39,7 @@ function sendSlackMessage(payload) {
   });
 }
 
-async function notifySummary({ totalActive, archived, failed, skippedGiftCards, results }) {
+async function notifySummary({ totalActive, archived, failed, skippedGiftCards, skippedCustomDenim, results }) {
   const blocks = [
     {
       type: "header",
@@ -50,6 +50,7 @@ async function notifySummary({ totalActive, archived, failed, skippedGiftCards, 
       fields: [
         { type: "mrkdwn", text: `*Active Products Scanned:*\n${totalActive}` },
         { type: "mrkdwn", text: `*Gift Cards Skipped:*\n${skippedGiftCards}` },
+        { type: "mrkdwn", text: `*Custom Denim Cut Skipped:*\n${skippedCustomDenim}` },
         { type: "mrkdwn", text: `*Archived (0 stock):*\n${archived}` },
         { type: "mrkdwn", text: `*Failed:*\n${failed}` },
       ],

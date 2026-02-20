@@ -28,7 +28,15 @@ async function run() {
     const skippedGiftCards = products.length - nonGiftCards.length;
     console.log(`[ARCHIVE] Skipped ${skippedGiftCards} gift cards`);
 
-    const zeroStock = nonGiftCards.filter((p) => getTotalInventory(p) <= 0);
+    // Exclude "Custom Denim Cut" products from archiving
+    const eligible = nonGiftCards.filter((p) => {
+      const title = (p.title || "").toLowerCase();
+      return !title.includes("custom denim cut");
+    });
+    const skippedCustomDenim = nonGiftCards.length - eligible.length;
+    console.log(`[ARCHIVE] Skipped ${skippedCustomDenim} Custom Denim Cut products`);
+
+    const zeroStock = eligible.filter((p) => getTotalInventory(p) <= 0);
     console.log(`[ARCHIVE] Found ${zeroStock.length} products with zero stock`);
 
     const results = [];
@@ -48,8 +56,8 @@ async function run() {
     const archived = results.filter((r) => r.archived).length;
     const failed = results.filter((r) => !r.archived).length;
 
-    const summary = { totalActive: products.length, archived, failed, skippedGiftCards, results };
-    console.log(`[ARCHIVE] Complete: ${archived} archived, ${failed} failed, ${skippedGiftCards} gift cards skipped`);
+    const summary = { totalActive: products.length, archived, failed, skippedGiftCards, skippedCustomDenim, results };
+    console.log(`[ARCHIVE] Complete: ${archived} archived, ${failed} failed, ${skippedGiftCards} gift cards skipped, ${skippedCustomDenim} Custom Denim Cut skipped`);
 
     await notifySummary(summary).catch((err) => {
       console.error(`[ARCHIVE] Slack notification failed: ${err.message}`);
